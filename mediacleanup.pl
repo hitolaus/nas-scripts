@@ -7,20 +7,39 @@
 #
 use strict;
 use File::Find;
+use Getopt::Long;
 
-my $DRY_RUN = 1;
+my @default_series_dirs = ("/c/media/Series", "/c/media/Movies");
 
-#my @series_dirs = ("/c/media/Series", "/c/media/Movies");
-my @series_dirs = ("/Users/jhn/Temp/");
+my $dry_run = 0;
+my @series_dirs = ();
 
+GetOptions ('test' => \$dry_run, 'directory=s' => \@series_dirs);
 
-if ($DRY_RUN) {
+if ($dry_run) {
 	print "\n";
 	print "############## WARNING #############\n";
 	print "Running as dry run\n";
 	print "####################################\n";
 	print "\n";
 }
+
+if (@series_dirs == 0) {
+	@series_dirs = @default_series_dirs;
+}
+
+print "Checking status of directories:\n";
+foreach (@series_dirs) {
+	print "$_";
+  	if (-d) {
+  		print " [OK]";
+  	}
+  	else {
+  		print " [FAILED]";
+  	}
+  	print "\n";
+}
+print "\n";
 
 find(\&process, @series_dirs);
 
@@ -50,13 +69,14 @@ sub process_rar
 	my ($name, $abs_file, $dir) = @_;
 	print "Unpacking: $abs_file ... ";
 	
-	if ($DRY_RUN) {
+	if ($dry_run) {
 		$? = 0;
 	}
 	else {
 		chdir($dir);
 		system("unrar e -o+ \"$abs_file\" > /dev/null");
 	}
+	
 	if ( $? == -1)
 	{
 		print "[ABORTED]\n";
@@ -82,7 +102,7 @@ sub cleanup_rar
 	opendir (DIR, $dir) or die $!;
 	while (my $file = readdir(DIR)) {
 		if ($file =~ /$name\.r(ar|[0-9]{2})$/i) {
-			if ($DRY_RUN) {
+			if ($dry_run) {
 				print "Would have deleted: $dir/$file\n";			
 			}
 			else {
@@ -98,9 +118,10 @@ sub process_sample
 	print "Deleting: $abs_file ... ";
 	
 	my $result = 1;
-	if (!$DRY_RUN) {
+	if (!$dry_run) {
 		$result = unlink($abs_file);
 	}
+	
 	if ( $result == 0 )
 	{
 		print "[FAILED]\n";
