@@ -4,9 +4,12 @@
 #
 # 1. Unrar media files and deletes the archive
 # 2. Remove sample media files
-#
+# 3. Move series episodes out of own directories to season directory
+##
 use strict;
 use File::Find;
+use File::Copy;
+use File::Basename;
 use Getopt::Long;
 
 my @default_series_dirs = ("/c/media/Series", "/c/media/Movies");
@@ -58,10 +61,15 @@ sub process
     {
         process_rar($_, $abs_file, $dir);
     }
-    elsif (/.*sample.*(avi|mpg|mkv)$/i)
+    elsif (is_sample_file($_))
     {
     	process_sample($abs_file);
     }
+    elsif (is_video_file($_))
+    {
+    	process_video($abs_file, $dir);
+    }
+    
 }
 
 sub process_rar
@@ -103,7 +111,7 @@ sub cleanup_rar
 	while (my $file = readdir(DIR)) {
 		if ($file =~ /$name\.r(ar|[0-9]{2})$/i) {
 			if ($dry_run) {
-				print "Would have deleted: $dir/$file\n";			
+				print "DRY RUN: delete $dir/$file\n";			
 			}
 			else {
 				unlink("$dir/$file");
@@ -129,4 +137,49 @@ sub process_sample
 	else {
 		print "[DONE]\n";
 	}
+}
+
+sub process_video
+{
+	my ($abs_file, $dir) = @_;
+	
+	process_episode_directory($abs_file, $dir);
+}
+
+sub process_episode_directory
+{
+	my ($abs_file, $dir) = @_;
+	
+	if (has_episode_dir($dir))
+	{
+		my $dest_file = dirname($dir) . "/" . basename($abs_file);
+		if ($dry_run)
+		{
+			print "DRY RUN: move $abs_file $dest_file\n";
+		}
+		else
+		{
+			move($abs_file, $dest_file);
+		}
+	}
+}
+
+############################
+# Helper subroutines
+############################
+sub has_episode_dir
+{
+	my ($dir_name) = @_;
+
+	return $dir_name =~ /.*S[0-9]{1,2}E[0-9]{1,2}.*/i;
+}
+sub is_video_file
+{
+	my $file = $_;
+	return $file =~ /.*(avi|mpg|mpeg|mkv)$/i;
+}
+sub is_sample_file
+{
+	my $file = $_;
+	return $file =~ /.*sample.*(avi|mpg|mkv)$/i;
 }
