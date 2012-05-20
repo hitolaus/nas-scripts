@@ -11,6 +11,7 @@ use File::Find;
 use File::Copy;
 use File::Basename;
 use Getopt::Long;
+use POSIX qw/strftime/;
 
 my @default_series_dirs = ("/c/media/Series", "/c/media/Movies");
 
@@ -30,6 +31,8 @@ if ($dry_run) {
 if (@series_dirs == 0) {
 	@series_dirs = @default_series_dirs;
 }
+
+print "Starting [" . strftime('%D %T',localtime) .  "]\n\n";
 
 print "Checking status of directories:\n";
 foreach (@series_dirs) {
@@ -176,10 +179,10 @@ sub has_episode_dir
 sub is_video_file
 {
 	my $file = $_;
-	return $file =~ /.*(avi|mpg|mpeg|mkv)$/i;
+	return $file =~ /.*(avi|mpg|mpeg|mkv|mp4|mpeg4)$/i;
 }
 sub is_sample_file
 {
 	my $file = $_;
-	return $file =~ /.*sample.*(avi|mpg|mkv)$/i;
+	return $file =~ /.*sample.*(avi|mpg|mkv|mp4|mpeg4)$/i;
 }
