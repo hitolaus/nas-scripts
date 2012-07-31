@@ -23,7 +23,9 @@ my $max_pls_files = 50;
 my $pls_output_file = "/c/media/Series/Comedy.pls";
 my $m3u_output_file = "/c/media/Series/Comedy.m3u";
 
-my $base_dir = "/c/media/Series";
+my $base_dir  = "/c/media/Series";
+my $share_dir = "/Media/Series";
+
 my @series_names = (
 	"Two and a Half Men", 
 	"The Big Bang Theory", 
@@ -44,7 +46,7 @@ my @series_names = (
 my $host = hostname();
 my $addr = inet_ntoa(scalar(gethostbyname($host)) || 'localhost');
 
-my $share_prefix = "smb://".$addr."/Media/Series";
+my $share_prefix = "smb://". $addr . $share_dir;
 
 
 my @series_dirs;
@@ -119,7 +121,7 @@ sub create_m3u
 	print M3U "#EXTM3U\n";
 	for (my $i = 0; $i < $#random_pls_urls+1; $i++) {
 		if ($i < $max_pls_files) {
-			print M3U "#EXTINF:-1, ".prettyprint_series($random_pls_urls[$i])."\n";
+			print M3U "#EXTINF:0,".prettyprint_series($random_pls_urls[$i])."\n";
 			print M3U $random_pls_urls[$i]."\n";;
 		}
 	}
