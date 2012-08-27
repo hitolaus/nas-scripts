@@ -27,7 +27,6 @@ my $base_dir  = "/c/media/Series";
 my $share_dir = "/Media/Series";
 
 my @series_names = (
-	"Two and a Half Men", 
 	"The Big Bang Theory", 
 	"Rules of Engagement", 
 	"Joey", 
@@ -39,7 +38,8 @@ my @series_names = (
 	"Will & Grace", 
 	"Melissa and Joey", 
 	"Friends", 
-	"Anger Management"
+	"Anger Management",
+	"Spin City"
 );
 
 
@@ -70,6 +70,8 @@ my @random_pls_urls = shuffle(@pls_urls);
 #print prettyprint_series(".../Two and a half Men/Season 4/two.and.a.half.men.412.bla.mkv") . "\n";
 #print prettyprint_series(".../Two and a half Men/Season 4/foo.bar.mkv") . "\n";
 #print prettyprint_series(".../Two and a half Men/Season 4/Dharma & Greg  - S03E23 - Hell to the chief.avi") . "\n";
+#print prettyprint_series(".../Two and a half Men/Season 4/Two and A Half Men S6E14 - David Copperfield Slipped Me a Roofie.avi") . "\n";
+#print prettyprint_series(".../Two and a half Men/Season 4/Two and A Half Men S6E4 - David Copperfield Slipped Me a Roofie.avi") . "\n";
 
 #################################
 # Subroutines
@@ -136,13 +138,14 @@ sub create_m3u
 # - two.and.a.half.men.410.bla.mkv
 # - The.Big.Bang.Theory.1x01.Pilot.720p.HDTV.x264.AC3-CTU.mkv
 # - Dharma & Greg  - S03E23 - Hell to the chief.avi
+# - Two and A Half Men S6E14 - David Copperfield Slipped Me a Roofie.avi
 sub prettyprint_series
 {
 	my ($path) = @_;
 
 	my($filename, $dir, $suffix) = fileparse($path);
 
-	my $regex1 = '[sS]([0-9]{2})[eE]([0-9]{2})';
+	my $regex1 = '[sS]([0-9]{1,2})[eE]([0-9]{1,2})';
 	my $regex2 = '([1-9])([0-9]{2})';
 	my $regex3 = '([1-9]{1,2})x([0-9]{2})';
 
@@ -160,22 +163,23 @@ sub prettyprint_series
 			$name = $dir_array[@dir_array-2];
 		}
 		$name =~ s/\./ /g; # Translate dots to spaces: two.and.a.half.men => two and a half men
-		$name =~ s/\s+$//; # Remove leading spaces
-		$name =~ s/-$//;   # Remove leading dashes: Joey - => Joey
-		$name =~ s/\s+$//; # Remove leading spaces again. This may happen if there was a leading dash
+		$name =~ s/\s+$//; # Remove leading/trailing spaces
+		$name =~ s/-$//;   # Remove leading/trailing dashes: Joey - => Joey
+		$name =~ s/\s+$//; # Remove leading/trailing spaces again. This may happen if there was a leading dash
 		$name =~ s/([\w']+)/\u\L$1/g; # Transform each word to uppercase
 	
-		$season  =~ s/^0+//;
-		$episode =~ s/^0+//;
+		$season  =~ s/^0+//; # Remove leading 0's
+		$episode =~ s/^0+//; # Remove leading 0's
 		
 		return "$name - Season $season Episode $episode";
 	}
 	else 
 	{
+		# Try to format the string as best as possible
 		my $name = $filename;
-		$name =~ s/\.[^.]*$//;
-		$name =~ s/\./ /g;
-		$name =~ s/\s+$//;
+		$name =~ s/\.[^.]*$//; # Remove extension
+		$name =~ s/\./ /g; # . to spaces
+		$name =~ s/\s+$//; # Remove leading/trailing spaces
 		
 		return "$name";
 	}
