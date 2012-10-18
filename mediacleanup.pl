@@ -12,6 +12,7 @@ use File::Copy;
 use File::Basename;
 use Getopt::Long;
 use POSIX qw/strftime/;
+use OpenSubtitles;
 
 my @default_series_dirs = ("/c/media/Series", "/c/media/Movies");
 
@@ -146,7 +147,9 @@ sub process_video
 {
 	my ($abs_file, $dir) = @_;
 	
-	process_episode_directory($abs_file, $dir);
+	my $dest_file = process_episode_directory($abs_file, $dir);
+	
+	download_subtitles($dest_file);
 }
 
 sub process_episode_directory
@@ -163,9 +166,40 @@ sub process_episode_directory
 		else
 		{
 			move($abs_file, $dest_file);
+			return $dest_file;
 		}
 	}
+	
+	return $abs_file;
 }
+
+sub download_subtitles
+{
+	my ($abs_file) = @_;
+	
+    if (!subtitles_exist($abs_file)) {
+	    my $os = OpenSubtitles->new();
+        $os->download($abs_file);
+    }
+}
+
+sub subtitles_exist
+{
+    my ($abs_file) = @_;
+    
+    my ($name, $path, $suffix) = fileparse( $abs_file, qr/\.[^.]*/ );
+    
+    my $found_subtitle = 0;
+    foreach my $subtitle_ext ("srt")
+    {
+        if ( -e "$path$name.$subtitle_ext") {
+            $found_subtitle = 1;
+        }
+    }
+    
+    return $found_subtitle;
+}
+
 
 ############################
 # Helper subroutines
