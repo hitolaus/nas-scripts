@@ -86,7 +86,7 @@ sub process_rar
 	}
 	else {
 		chdir($dir);
-		system("unrar e -o+ \"$abs_file\" > /dev/null");
+		system("unrar e -o+ -p- \"$abs_file\" > /dev/null");
 	}
 	
 	if ( $? == -1)
@@ -189,6 +189,10 @@ sub subtitles_exist
     
     my ($name, $path, $suffix) = fileparse( $abs_file, qr/\.[^.]*/ );
     
+    if (has_nosub($path, $name)) {
+        return 1;
+    }
+        
     my $found_subtitle = 0;
     foreach my $subtitle_ext ("srt")
     {
@@ -197,9 +201,57 @@ sub subtitles_exist
         }
     }
     
+    if (!$found_subtitle) {
+        register_nosub($path, $name);
+    }
+    
     return $found_subtitle;
 }
 
+sub has_nosub
+{
+    my ($path, $name) = @_;
+    
+    return nosub_count($path, $name) > 24;
+}
+
+sub register_nosub
+{
+    my ($path, $name) = @_;
+    
+    my $cnt = nosub_count($path, $name);
+    
+    open (NOSUB_FILE, ">".nosub($path, $name));
+    
+    print NOSUB_FILE $cnt + 1;
+    
+    close(NOSUB_FILE);
+}
+
+sub nosub_count
+{
+    my ($path, $name) = @_;
+    
+    my $cnt = 0;
+    
+    open (NOSUB_FILE, nosub($path, $name));
+    
+    while (<NOSUB_FILE>) {
+     	chomp;
+     	$cnt = $_;
+    }
+    
+    close(NOSUB_FILE);
+    
+    return $cnt;
+}
+
+sub nosub
+{
+    my ($path, $name) = @_;
+    
+    return "$path.$name.nosub";
+}
 
 ############################
 # Helper subroutines
