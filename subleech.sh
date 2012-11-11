@@ -7,7 +7,10 @@
 
 MAX_TRIES=20
 
-FILES=$(find . -type f | egrep "avi$|mkv$|mp4$|m4v$")
+SAVEIFS=$IFS
+IFS=$(echo -en "\n\b")
+
+FILES=$(find . -type f | egrep "avi$|mkv$|mp4$|m4v$" | grep -v AppleDouble)
 
 for f in $FILES
 do
@@ -24,9 +27,12 @@ do
         
         if [[ $tries < $MAX_TRIES ]]; then
             periscope -l en "$filename"
+            # echo "$filename"
         fi
         
         tries=$(($tries+1))
         echo $tries > "$config"
     fi
 done
+
+IFS=$SAVEIFS
