@@ -19,11 +19,11 @@ do
     
     if [[ ! -e "$path/$filename.srt" ]]; then
         config="$path/.$filename.subleech"
-        $(touch $config)
+        $(touch "$config")
         tries=$(cat $config | tr -d ' ')
         
         if [[ $tries < $MAX_TRIES ]]; then
-            periscope -l en $filename
+            periscope -l en "$filename"
         fi
         
         tries=$(($tries+1))
