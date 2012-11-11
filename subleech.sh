@@ -5,7 +5,7 @@
 # Simple script for recursively finding subtitles using Periscope.
 ##
 
-MAX_TRIES=3
+MAX_TRIES=20
 
 FILES=$(find . -type f | egrep "avi$|mkv$|mp4$|m4v$")
 
@@ -23,8 +23,7 @@ do
         tries=$(cat $config | tr -d ' ')
         
         if [[ $tries < $MAX_TRIES ]]; then
-            # TODO: exec periscope
-            echo $filename
+            periscope -l en $filename
         fi
         
         tries=$(($tries+1))

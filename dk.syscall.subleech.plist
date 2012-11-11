@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>dk.syscall.subleech</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/jhn/Applications/nas-scripts/subleech.sh</string>
+    </array>
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>06</integer>
+        <key>Minute</key>
+        <integer>00</integer>
+    </dict>
+    <key>StandardErrorPath</key>
+    <string>/Users/jhn/Library/Logs/subleech.log</string>
+    <key>StandardOutPath</key>
+    <string>/Users/jhn/Library/Logs/subleech.log</string>
+    <key>WorkingDirectory</key>
+    <string>/Volumes/Media</string>
+</dict>
+</plist>
