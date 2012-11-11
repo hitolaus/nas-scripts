@@ -11,8 +11,8 @@ FILES=$(find . -type f | egrep "avi$|mkv$|mp4$|m4v$")
 
 for f in $FILES
 do
-    filename=$(basename $f)
-    path=$(dirname $f)
+    filename=$(basename "$f")
+    path=$(dirname "$f")
     
     extension="${filename##*.}"
     filename="${filename%.*}"
