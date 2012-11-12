@@ -26,7 +26,7 @@ do
         tries=$(cat "$config" | tr -d ' ')
         
         if [[ $tries < $MAX_TRIES ]]; then
-            periscope -l en "$filename"
+            /usr/local/bin/periscope -l en "$filename"
             # echo "$filename"
         fi
         
