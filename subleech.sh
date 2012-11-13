@@ -26,8 +26,7 @@ do
         tries=$(cat "$config" | tr -d ' ')
         
         if [[ $tries < $MAX_TRIES ]]; then
-            /usr/local/bin/periscope -l en "$filename"
-            # echo "$filename"
+            /usr/local/bin/periscope -l en "$f"
         fi
         
         tries=$(($tries+1))
