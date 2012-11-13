@@ -9,7 +9,7 @@
 #
 
 DIR="${TR_TORRENT_DIR}/${TR_TORRENT_NAME}/"
-cd $DIR
+cd "$DIR"
 /usr/local/bin/unrar e "$DIR/*.rar" > unrar.log
 
 #transmission-remote -n $TR_USERNAME:$TR_PASSWORD -t$TR_TORRENT_ID --remove-and-delete
