@@ -19,7 +19,8 @@ use POSIX qw/strftime/;
 my $max_pls_files = 25;
 
 
-my $default_base_dir = "/Volumes/External/Blah";
+my $default_base_dir = "/Volumes/Media/Series";
+my $default_dest_dir = "/Volumes/Media/Random Series";
 
 my $dry_run = 0;
 my $base_dir;
@@ -40,7 +41,7 @@ if ($base_dir eq "") {
 }
 
 if ($dest_dir eq "") {
-	$dest_dir = ".";
+	$dest_dir = $default_dest_dir;
 }
 
 my @series_names = (
