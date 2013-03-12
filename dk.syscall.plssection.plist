@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>dk.syscall.plssection</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/jhn/Applications/nas-scripts/plssection.pl</string>
+    </array>
+    <key>StartInterval</key>
+    <integer>3600</integer>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>StandardErrorPath</key>
+    <string>/Users/jhn/Library/Logs/plssection.log</string>
+    <key>StandardOutPath</key>
+    <string>/Users/jhn/Library/Logs/plssection.log</string>
+    <key>WorkingDirectory</key>
+    <string>/Volumes/Media</string>
+</dict>
+</plist>
