@@ -139,7 +139,7 @@ sub process
         return;
     }
 
-    if (/\.mpg$|\.avi$|\.mkv$|\.ts$/i)
+    if (/\.mpg$|\.avi$|\.mkv$|\.ts|\.mp4$/i)
     {
         push(@pls_files, "$abs_file");
     }
